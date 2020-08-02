@@ -89,6 +89,12 @@
     <Compile Include="CaptureForm.Designer.cs">
       <DependentUpon>CaptureForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\CoverCreateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\CoverCreateDialog.Designer.cs">
+      <DependentUpon>CoverCreateDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,12 +105,16 @@
     <Compile Include="Framework\CaptureTool.cs" />
     <Compile Include="Framework\Communication\ArkEventPacket.cs" />
     <Compile Include="Framework\Communication\ArkEventPacketOpcode.cs" />
+    <Compile Include="Framework\Communication\Entities\CoverTransform.cs" />
     <Compile Include="Framework\Communication\Packets\ArkEventPacket_0_ConsoleLogMessage.cs" />
     <Compile Include="Framework\Communication\Packets\ArkEventPacket_1_MoveCamera.cs" />
     <Compile Include="Framework\Communication\Packets\ArkEventPacket_2_SetCameraProps.cs" />
     <Compile Include="Framework\Communication\Packets\ArkEventPacket_4_QueryAllActors.cs" />
     <Compile Include="Framework\Communication\Packets\ArkEventPacket_5_UpdateActorProps.cs" />
+    <Compile Include="Framework\Communication\Packets\ArkEventPacket_6_CmdCreateCover.cs" />
+    <Compile Include="Framework\Communication\Packets\ArkEventPacket_7_CmdModifyCover.cs" />
     <Compile Include="Framework\Communication\QueryAllCmdReturn\QueryAllCmdResponse.cs" />
+    <Compile Include="Framework\Entities\ARKCoverActor.cs" />
     <Compile Include="Framework\ServerCommunicationTool.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,6 +126,9 @@
     </Compile>
     <EmbeddedResource Include="CaptureForm.resx">
       <DependentUpon>CaptureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\CoverCreateDialog.resx">
+      <DependentUpon>CoverCreateDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

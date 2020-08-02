@@ -50,7 +50,7 @@ namespace RomanPort.ARKMapCaptureCommander
         {
             List<CameraMoveCommand> cmds = new List<CameraMoveCommand>();
             float halfMapSize = Program.profile.mapSize / 2f;
-            for(int i = 0; i<Program.profile.zoomLevels; i++)
+            for(int i = 0; i<Program.profile.zoomLevels + 1; i++)
             {
                 int dimenElements = (int)Math.Pow(2, i); //Number of elements in each dimen
                 float captureSize = (float)Program.profile.mapSize / (float)dimenElements; //Size of each capture in game units. Also used as zoom size
@@ -130,7 +130,7 @@ namespace RomanPort.ARKMapCaptureCommander
                 }
 
                 //Delay to allow further render
-                Thread.Sleep(130);
+                Thread.Sleep(230);
                 bp = CaptureTool.PrintWindow(Program.process);
 
                 //Queue

@@ -20,6 +20,7 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
         public int zoomLevels = 6;
         public int cameraHeight = 400000;
         public float rotation = -90;
+        public string output = "";
 
         public List<CaptureProfileActorParams> actors = new List<CaptureProfileActorParams>();
     }

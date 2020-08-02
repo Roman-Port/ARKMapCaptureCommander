@@ -13,6 +13,8 @@ namespace RomanPort.ARKMapCaptureCommander.Framework.Communication
         SetCameraProps = 2,
         RemoveUnessessaryActors = 3,
         QueryAllActors = 4,
-        UpdateActorProps = 5
+        UpdateActorProps = 5,
+        CreateCover = 6,
+        ModifyCover = 7
     }
 }

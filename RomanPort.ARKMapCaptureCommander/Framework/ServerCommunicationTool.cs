@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RomanPort.ARKMapCaptureCommander.Framework.Communication;
+using RomanPort.ARKMapCaptureCommander.Framework.Communication.Entities;
 using RomanPort.ARKMapCaptureCommander.Framework.Communication.Packets;
 using RomanPort.ARKMapCaptureCommander.Framework.Communication.QueryAllCmdReturn;
 using System;
@@ -112,6 +113,29 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
                 index = index,
                 opcode = ArkEventPacketOpcode.UpdateActorProps
             });
+        }
+
+        public void CmdCreateCover(ServerCommsCallback callback)
+        {
+            var e = new ArkEventPacket_6_CmdCreateCover
+            {
+                opcode = ArkEventPacketOpcode.CreateCover,
+                callback_id = RegisterCallback(callback)
+            };
+
+            events.Add(e);
+        }
+
+        public void CmdModifyCover(int index, CoverTransform transform)
+        {
+            var e = new ArkEventPacket_7_CmdModifyCover
+            {
+                opcode = ArkEventPacketOpcode.ModifyCover,
+                cover_index = index,
+                transform = transform
+            };
+
+            events.Add(e);
         }
 
         private void OnGetContext(IAsyncResult ar)
