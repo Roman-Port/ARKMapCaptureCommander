@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using RomanPort.ARKMapCaptureCommander.Framework.Entities;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -18,33 +19,38 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
         private const int WINDOW_PADDING_SIZE = 9;
         private const int WINDOW_TOP_PADDING_SIZE = 32;
 
-        public static Image<Rgba32> CaptureProcessWindow(Process p)
-        {
-            //Capture the bitmap
-            Bitmap bp = PrintWindow(p);
+        private const int SEA_COLOR_REFERENCE_R = 48;
+        private const int SEA_COLOR_REFERENCE_G = 115;
+        private const int SEA_COLOR_REFERENCE_B = 183;
 
-            return ConvertBitmapToImage(bp);
-        }
-
-        public static Image<Rgba32> ConvertBitmapToImage(Bitmap bp)
+        public static Image<Rgba32> ConvertBitmapToImage(DirectBitmap bp, out int maxDiff)
         {
             //Create ImageSharp bitmap and copy
             Image<Rgba32> img = new Image<Rgba32>(bp.Width - (WINDOW_PADDING_SIZE * 2), bp.Height - WINDOW_PADDING_SIZE - WINDOW_TOP_PADDING_SIZE);
             System.Drawing.Color c;
+            maxDiff = 0;
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
+                    //Read
                     c = bp.GetPixel(x + WINDOW_PADDING_SIZE, y + WINDOW_TOP_PADDING_SIZE);
+
+                    //Convert
                     img[x, y] = new Rgba32(c.R, c.G, c.B, c.A);
+
+                    //Guess if this is just water
+                    maxDiff = Math.Max(maxDiff, Math.Abs(c.R - SEA_COLOR_REFERENCE_R));
+                    maxDiff = Math.Max(maxDiff, Math.Abs(c.G - SEA_COLOR_REFERENCE_G));
+                    maxDiff = Math.Max(maxDiff, Math.Abs(c.B - SEA_COLOR_REFERENCE_B));
                 }
             }
             return img;
         }
 
-        public static Bitmap PrintWindow(Process p)
+        public static DirectBitmap PrintWindow(Process p)
         {
-            Bitmap bp = PrintWindow(p.MainWindowHandle);
+            DirectBitmap bp = PrintWindow(p.MainWindowHandle);
             return bp;
         }
         
@@ -53,14 +59,14 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
         [DllImport("user32.dll")]
         private static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
 
-        private static Bitmap PrintWindow(IntPtr hwnd)
+        private static DirectBitmap PrintWindow(IntPtr hwnd)
         {
             //Get rect
             RECT rc;
             GetWindowRect(hwnd, out rc);
 
-            Bitmap bmp = new Bitmap(rc.Width, rc.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics gfxBmp = Graphics.FromImage(bmp);
+            DirectBitmap bmp = new DirectBitmap(rc.Width, rc.Height);
+            Graphics gfxBmp = Graphics.FromImage(bmp.Bitmap);
             IntPtr hdcBitmap = gfxBmp.GetHdc();
 
             PrintWindow(hwnd, hdcBitmap, 0);
@@ -69,6 +75,40 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
             gfxBmp.Dispose();
 
             return bmp;
+        }
+
+        /// <summary>
+        /// Returns an empty bitmap in the size of a specified window
+        /// </summary>
+        /// <param name="hwnd"></param>
+        public static DirectBitmap GetEmptyBitmapFromWindowRect(Process p)
+        {
+            //Get rect
+            RECT rc;
+            GetWindowRect(p.MainWindowHandle, out rc);
+
+            //Create
+            DirectBitmap bmp = new DirectBitmap(rc.Width, rc.Height);
+
+            return bmp;
+        }
+
+        public static void PrintWindowToBitmap(Process p, DirectBitmap bmp)
+        {
+            //Get window rect
+            RECT rc;
+            GetWindowRect(p.MainWindowHandle, out rc);
+
+            //Prepare
+            Graphics gfxBmp = Graphics.FromImage(bmp.Bitmap);
+            IntPtr hdcBitmap = gfxBmp.GetHdc();
+
+            //Write
+            PrintWindow(p.MainWindowHandle, hdcBitmap, 0);
+
+            //Clean up
+            gfxBmp.ReleaseHdc(hdcBitmap);
+            gfxBmp.Dispose();
         }
 
         [StructLayout(LayoutKind.Sequential)]

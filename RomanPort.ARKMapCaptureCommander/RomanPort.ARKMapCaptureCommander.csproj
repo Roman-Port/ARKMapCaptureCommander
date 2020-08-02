@@ -115,6 +115,7 @@
     <Compile Include="Framework\Communication\Packets\ArkEventPacket_7_CmdModifyCover.cs" />
     <Compile Include="Framework\Communication\QueryAllCmdReturn\QueryAllCmdResponse.cs" />
     <Compile Include="Framework\Entities\ARKCoverActor.cs" />
+    <Compile Include="Framework\Entities\DirectBitmap.cs" />
     <Compile Include="Framework\ServerCommunicationTool.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

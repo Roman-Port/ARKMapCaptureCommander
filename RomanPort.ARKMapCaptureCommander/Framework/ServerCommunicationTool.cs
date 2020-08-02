@@ -47,6 +47,12 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
             return id;
         }
 
+        public void ResendDropped(ArkEventPacket packet)
+        {
+            if (!events.Contains(packet))
+                events.Add(packet);
+        }
+
         public void CmdShowLogMessage(string msg)
         {
             events.Add(new ArkEventPacket_0_ConsoleLogMessage
@@ -56,7 +62,7 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
             });
         }
 
-        public void CmdMoveCamera(float x, float y, float z, float rot, ServerCommsCallback callback = null)
+        public ArkEventPacket_1_MoveCamera CmdMoveCamera(float x, float y, float z, float rot, ServerCommsCallback callback = null)
         {
             var e = new ArkEventPacket_1_MoveCamera
             {
@@ -77,6 +83,8 @@ namespace RomanPort.ARKMapCaptureCommander.Framework
             }
 
             events.Add(e);
+
+            return e;
         }
         
         public void CmdQueryAllActors(ServerCommsCallback callback)
